@@ -2,6 +2,9 @@
 #include <chrono>
 #include <random>
 
+const int VIDEO_HEIGHT = 64;
+const int VIDEO_WIDTH = 32;
+
 class Chip8
 {
     public:
@@ -24,6 +27,14 @@ class Chip8
 
         void loadRom(char* fileName);
         void loadFontSet();
+        void Cycle();
+
+        typedef void (Chip8::*Chip8Func)();
+        Chip8Func table[0xF + 1];
+        Chip8Func table0[0xE + 1];
+        Chip8Func table8[0xE + 1];
+        Chip8Func tableE[0xE + 1];
+        Chip8Func tableF[0x65 + 1];
 
         void OP_00E0();
         void OP_00EE();
@@ -55,6 +66,7 @@ class Chip8
 
         void OP_Ex9E();
         void OP_ExA1();
+        void OP_Fx07();
         void OP_Fx0A();
         void OP_Fx15();
         void OP_Fx18();
@@ -63,4 +75,10 @@ class Chip8
         void OP_Fx33();
         void OP_Fx55();
         void OP_Fx65();
+
+        void Table0();
+        void Table8();
+        void TableE();
+        void TableF();
+        void OP_NULL();
 };
