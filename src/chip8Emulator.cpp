@@ -3,7 +3,7 @@
 #include <ios>
 #include <cstdint>
 
-#include "Chip8.h"
+#include "../include/Chip8.h"
 
 
 int main( int argc, char* argv[])
