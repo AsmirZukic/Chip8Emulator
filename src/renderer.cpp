@@ -8,7 +8,7 @@ Renderer::Renderer()
 {
   try
   {
-    mRenderer = SDL_CreateRenderer( Window::getInstance()->getWindow() , -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+    mRenderer = SDL_CreateRenderer( Window::getInstance()->getWindow() , -1, SDL_RENDERER_ACCELERATED );
 
     if( !mRenderer )
     {

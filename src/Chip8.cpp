@@ -5,12 +5,33 @@
 #include <cstring>
 #include "../include/Chip8.h"
 
+std::uint8_t fontset[80] =
+{
+    0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+    0x20, 0x60, 0x20, 0x20, 0x70, // 1
+    0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+    0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+    0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+    0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+    0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+    0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+    0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+    0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+    0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+    0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+    0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+    0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+    0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+    0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+};
+
 Chip8::Chip8(char* path):randGen(std::chrono::system_clock::now().time_since_epoch().count())
 {
     pc = 0x200;
 
     loadFontSet();
     loadRom(path);
+
     randByte = std::uniform_int_distribution<uint8_t>(0, 255U); 
 
     // Set up function pointer table
@@ -31,12 +52,12 @@ Chip8::Chip8(char* path):randGen(std::chrono::system_clock::now().time_since_epo
     table[0xE] = &Chip8::TableE;
     table[0xF] = &Chip8::TableF;
 
-    for (size_t i = 0; i <= 0xE; i++)
-    {
-        table0[i] = &Chip8::OP_NULL;
-        table8[i] = &Chip8::OP_NULL;
-        tableE[i] = &Chip8::OP_NULL;
-    }
+	for (size_t i = 0; i <= 0xE; i++)
+	{
+		table0[i] = &Chip8::OP_NULL;
+		table8[i] = &Chip8::OP_NULL;
+		tableE[i] = &Chip8::OP_NULL;
+	}
 
     table0[0x0] = &Chip8::OP_00E0;
     table0[0xE] = &Chip8::OP_00EE;
@@ -54,10 +75,10 @@ Chip8::Chip8(char* path):randGen(std::chrono::system_clock::now().time_since_epo
     tableE[0x1] = &Chip8::OP_ExA1;
     tableE[0xE] = &Chip8::OP_Ex9E;
 
-    for (size_t i = 0; i <= 0x65; i++)
-    {
-        tableF[i] = &Chip8::OP_NULL;
-    }
+	for (size_t i = 0; i <= 0x65; i++)
+	{
+		tableF[i] = &Chip8::OP_NULL;
+	}
 
     tableF[0x07] = &Chip8::OP_Fx07;
     tableF[0x0A] = &Chip8::OP_Fx0A;
@@ -68,40 +89,15 @@ Chip8::Chip8(char* path):randGen(std::chrono::system_clock::now().time_since_epo
     tableF[0x33] = &Chip8::OP_Fx33;
     tableF[0x55] = &Chip8::OP_Fx55;
     tableF[0x65] = &Chip8::OP_Fx65;
-    
 
 }
 
 void Chip8::loadFontSet()
 {
-    std::uint16_t fontSetStartAddress = 0x50;
-    std::uint16_t fontsetSize = 80;
-
-    std::uint8_t fontset[fontsetSize] =
+    for(auto i = 0; i < 0x50; i++)
     {
-        0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-        0x20, 0x60, 0x20, 0x20, 0x70, // 1
-        0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-        0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-        0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-        0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-        0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-        0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-        0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-        0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-        0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-        0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-        0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-        0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-        0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-        0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-    };
-
-    for(auto i = 0; i < fontSetStartAddress; i++)
-    {
-        memory[fontSetStartAddress + i] = fontset[i];
+        memory[0x50 + i] = fontset[i];
     }
-
 }
 
 void Chip8::loadRom(char* filename)
@@ -331,13 +327,13 @@ void Chip8::OP_Cxkk()
 
 void Chip8::OP_Dxyn()
 {
-    std::uint8_t registerVx = (opcode & 0x0F00u) >> 8u;
-	std::uint8_t registerVy = (opcode & 0x00F0u) >> 4u;
+	std::uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	std::uint8_t Vy = (opcode & 0x00F0u) >> 4u;
 	std::uint8_t height = opcode & 0x000Fu;
 
 	// Wrap if going beyond screen boundaries
-	std::uint8_t xPos = registers[registerVx] % VIDEO_WIDTH;
-	std::uint8_t yPos = registers[registerVy] % VIDEO_HEIGHT;
+	std::uint8_t xPos = registers[Vx] % VIDEO_WIDTH;
+	std::uint8_t yPos = registers[Vy] % VIDEO_HEIGHT;
 
 	registers[0xF] = 0;
 
@@ -365,6 +361,7 @@ void Chip8::OP_Dxyn()
 		}
 	}
 }
+
 
 void Chip8::OP_Ex9E()
 {

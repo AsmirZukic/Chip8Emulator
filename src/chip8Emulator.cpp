@@ -12,14 +12,13 @@ int main( int argc, char* argv[] )
 {
     Chip8 emulator(argv[1]);
 
-    int videoPitch = sizeof(emulator.video[0]) * VIDEO_WIDTH;
+    int videoPitch = sizeof(emulator.video[0])*VIDEO_WIDTH;
 	auto lastCycleTime = std::chrono::high_resolution_clock::now();
     auto cycleDelay = 10; 
 
-
     while( Engine::getInstance()->isRunning() )
     {
-        Texture texture(5, 5);
+        Texture texture(64, 32);
 
         InputHandler::getInstance()->update(emulator.keyPad);
 
@@ -34,7 +33,6 @@ int main( int argc, char* argv[] )
 
             texture.update(emulator.video,videoPitch);
 			Engine::getInstance()->render(texture.getTexture());
-
             Engine::getInstance()->draw();
 		}
 
