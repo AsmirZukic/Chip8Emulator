@@ -1,15 +1,10 @@
 #include "../include/texture.hpp"
-#include "../include/textureLoader.hpp"
 #include "../include/renderer.hpp"
 
-Texture::Texture( std::string path ) : mTexture( nullptr ), mWidht( 0 ), mHeight( 0 )
-{
-    mTexture = TextureLoader::getInstance()->loadTexture( path.c_str() );
 
-    if( mTexture )
-    {
-        SDL_QueryTexture( mTexture, nullptr, nullptr, &mWidht, &mHeight);
-    }
+Texture::Texture(int textureWidth, int textureHeight)
+{
+    mTexture = SDL_CreateTexture( Renderer::getInstance()->getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, textureWidth, textureHeight);
 }
 
 Texture::~Texture()
@@ -23,26 +18,16 @@ void Texture::free()
     {
         SDL_DestroyTexture( mTexture );
         mTexture = nullptr;
-        mWidht = 0;
-        mHeight = 0;
     }
 }
 
-void Texture::render( int xPos, int yPos )
+SDL_Texture* Texture::getTexture()
 {
-    SDL_Rect renderQuad{ xPos, yPos, mWidht, mHeight };
-    SDL_RenderCopy( Renderer::getInstance()->getRenderer(), mTexture, nullptr, &renderQuad );
+    return mTexture;
 }
 
-void Texture::render( int xPos, int yPos, SDL_Rect* clip )
+void Texture::update( std::uint32_t* buffer, int pitch)
 {
-  SDL_Rect renderQuad{ xPos, yPos, mWidht, mHeight };
-
-  if( clip )
-  {
-    renderQuad.w = clip->w;
-    renderQuad.h = clip->h;
-  }
-
-  SDL_RenderCopy( Renderer::getInstance()->getRenderer(), mTexture, clip, &renderQuad );
+    SDL_UpdateTexture( mTexture, nullptr, buffer, pitch);
 }
+

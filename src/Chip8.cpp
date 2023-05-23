@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <stdlib.h>
 #include <cstring>
-#include "Chip8.h"
+#include "../include/Chip8.h"
 
 Chip8::Chip8(char* path):randGen(std::chrono::system_clock::now().time_since_epoch().count())
 {
@@ -68,6 +68,7 @@ Chip8::Chip8(char* path):randGen(std::chrono::system_clock::now().time_since_epo
     tableF[0x33] = &Chip8::OP_Fx33;
     tableF[0x55] = &Chip8::OP_Fx55;
     tableF[0x65] = &Chip8::OP_Fx65;
+    
 
 }
 
@@ -558,3 +559,27 @@ void Chip8::Cycle()
 		--soundTImer;
 	}
 }
+
+
+void Chip8::Table0()
+{
+    ((*this).*(table0[opcode & 0x000Fu]))();
+}
+
+void Chip8::Table8()
+{
+    ((*this).*(table8[opcode & 0x000Fu]))();
+}
+
+void Chip8::TableE()
+{
+    ((*this).*(tableE[opcode & 0x000Fu]))();
+}
+
+void Chip8::TableF()
+{
+    ((*this).*(tableF[opcode & 0x00FFu]))();
+}
+
+void Chip8::OP_NULL()
+{}

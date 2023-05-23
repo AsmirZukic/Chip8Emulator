@@ -3,9 +3,9 @@
 
 InputHandler* InputHandler::iHandler = nullptr;
 
-InputHandler::InputHandler() : mousePos( new Vector2D(0, 0) ) {}
+InputHandler::InputHandler(){}
 
-void InputHandler::update()
+void InputHandler::update( std::uint8_t* keys)
 {
 	SDL_Event event;
 
@@ -18,23 +18,11 @@ void InputHandler::update()
 			break;
 
 		case SDL_KEYDOWN:
-			onKeyDown( &event );
+			onKeyDown( &event, keys );
 			break;
 
 		case SDL_KEYUP:
-			onKeyUp( &event );
-			break;
-
-		case SDL_MOUSEMOTION:
-			onMouseMove( event );
-			break;
-
-		case SDL_MOUSEBUTTONDOWN:
-				onMouseButtonDown( event );
-			break;
-
-		case SDL_MOUSEBUTTONUP:
-			onMouseButtonUp( event );
+			onKeyUp( &event, keys);
 			break;
 
 		default:
@@ -43,61 +31,181 @@ void InputHandler::update()
 	}
 }
 
-void InputHandler::onMouseButtonDown( SDL_Event& e )
+void InputHandler::onKeyDown( SDL_Event* event, std::uint8_t* keys)
 {
+	switch (event->key.keysym.sym)
+	{
+		case SDLK_ESCAPE:
+		{
+			Window::getInstance()->close();
+		} break;
 
-	if ( e.button.button == SDL_BUTTON_LEFT )
-	{
-		mouseButtonStates[LEFT] = true;
-	}
-  else if ( e.button.button == SDL_BUTTON_MIDDLE )
-	{
-		mouseButtonStates[MIDDLE] = true;
-	}
-  else if ( e.button.button == SDL_BUTTON_RIGHT )
-	{
-		mouseButtonStates[RIGHT] = true;
+		case SDLK_x:
+		{
+			keys[0] = 1;
+		} break;
+
+		case SDLK_1:
+		{
+			keys[1] = 1;
+		} break;
+
+		case SDLK_2:
+		{
+			keys[2] = 1;
+		} break;
+
+		case SDLK_3:
+		{
+			keys[3] = 1;
+		} break;
+
+		case SDLK_q:
+		{
+			keys[4] = 1;
+		} break;
+
+		case SDLK_w:
+		{
+			keys[5] = 1;
+		} break;
+
+		case SDLK_e:
+		{
+			keys[6] = 1;
+		} break;
+
+		case SDLK_a:
+		{
+			keys[7] = 1;
+		} break;
+
+		case SDLK_s:
+		{
+			keys[8] = 1;
+		} break;
+
+		case SDLK_d:
+		{
+			keys[9] = 1;
+		} break;
+
+		case SDLK_z:
+		{
+			keys[0xA] = 1;
+		} break;
+
+		case SDLK_c:
+		{
+			keys[0xB] = 1;
+		} break;
+
+		case SDLK_4:
+		{
+			keys[0xC] = 1;
+		} break;
+
+		case SDLK_r:
+		{
+			keys[0xD] = 1;
+		} break;
+
+		case SDLK_f:
+		{
+			keys[0xE] = 1;
+		} break;
+
+		case SDLK_v:
+		{
+			keys[0xF] = 1;
+		} break;
 	}
 }
 
-void InputHandler::onMouseButtonUp( SDL_Event& e )
+void InputHandler::onKeyUp(SDL_Event* event, std::uint8_t* keys)
 {
-	if ( e.button.button == SDL_BUTTON_LEFT )
+	switch (event->key.keysym.sym)
 	{
-		mouseButtonStates[LEFT] = false;
+		case SDLK_x:
+		{
+			keys[0] = 0;
+		} break;
+
+		case SDLK_1:
+		{
+			keys[1] = 0;
+		} break;
+
+		case SDLK_2:
+		{
+			keys[2] = 0;
+		} break;
+
+		case SDLK_3:
+		{
+			keys[3] = 0;
+		} break;
+
+		case SDLK_q:
+		{
+			keys[4] = 0;
+		} break;
+
+		case SDLK_w:
+		{
+			keys[5] = 0;
+		} break;
+
+		case SDLK_e:
+		{
+			keys[6] = 0;
+		} break;
+
+		case SDLK_a:
+		{
+			keys[7] = 0;
+		} break;
+
+		case SDLK_s:
+		{
+			keys[8] = 0;
+		} break;
+
+		case SDLK_d:
+		{
+			keys[9] = 0;
+		} break;
+
+		case SDLK_z:
+		{
+			keys[0xA] = 0;
+		} break;
+
+		case SDLK_c:
+		{
+			keys[0xB] = 0;
+		} break;
+
+		case SDLK_4:
+		{
+			keys[0xC] = 0;
+		} break;
+
+		case SDLK_r:
+		{
+			keys[0xD] = 0;
+		} break;
+
+		case SDLK_f:
+		{
+			keys[0xE] = 0;
+		} break;
+
+		case SDLK_v:
+		{
+			keys[0xF] = 0;
+		} break;
 	}
-  else if ( e.button.button == SDL_BUTTON_MIDDLE )
-	{
-		mouseButtonStates[MIDDLE] = false;
-	}
-  else if ( e.button.button == SDL_BUTTON_RIGHT )
-	{
-		mouseButtonStates[RIGHT] = false;
-	}
-}
-
-void InputHandler::onMouseMove( SDL_Event& e )
-{
-	mousePos->setX( e.motion.x );
-	mousePos->setY( e.motion.y );
-}
-
-void InputHandler::reset()
-{
-	for (int i = 0; i < 3; i++)
-	{
-		mouseButtonStates[i] = false;
-	}
-}
-
-void InputHandler::onKeyDown( SDL_Event* event )
-{
-
-}
-
-void InputHandler::onKeyUp(SDL_Event* event)
-{
-
 }
 
 bool InputHandler::isKeyDown( SDL_Scancode key )

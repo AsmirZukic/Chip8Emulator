@@ -27,8 +27,6 @@ Engine::Engine()
     std::cerr << msg << '\n';
     running = false;
   }
-
-  render();
 }
 
 Engine::~Engine()
@@ -40,16 +38,14 @@ Engine::~Engine()
 }
 
 
-void Engine::render()
+void Engine::render(SDL_Texture* texture)
 {
-  SDL_SetRenderDrawColor( Renderer::getInstance()->getRenderer(), 0x00, 0x00, 0x00, 0xFF );
-
   SDL_RenderClear( Renderer::getInstance()->getRenderer() );
+  SDL_RenderCopy(Renderer::getInstance()->getRenderer(), texture, nullptr, nullptr);
 }
 
 const bool Engine::isRunning()
 {
-  InputHandler::getInstance()->update();
   return Window::getInstance()->isOpen() && Renderer::getInstance()->isCreated() && running;
 }
 

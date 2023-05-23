@@ -50,7 +50,7 @@ Window* Window::getInstance()
     if( !iWindow )
     {
       //Create a new instance of window
-      iWindow = new Window( 1280, 720 );
+      iWindow = new Window( 64, 32 );
     }
     //Else just return the singleton instance
     return iWindow;

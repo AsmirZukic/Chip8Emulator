@@ -1,9 +1,9 @@
 #pragma once
 #include "renderer.hpp"
 #include "inputHandler.hpp"
-#include "textureLoader.hpp"
+#include "texture.hpp"
 
-class Engine
+class Engine  
 {
 private:
   bool running = false;
@@ -18,7 +18,7 @@ private:
 public:
   static Engine* getInstance();
 
-  virtual void render();
+  virtual void render( SDL_Texture* texture );
 
   const bool isRunning();
 

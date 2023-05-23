@@ -7,17 +7,11 @@ class Texture
 {
 private:
     SDL_Texture* mTexture;
-    int mWidht, mHeight;
-
 public:
-    Texture(){}
-    Texture( std::string path );
+    Texture(int textureWidth, int textureHeight);
     ~Texture();
 
-    void render( int xPos, int yPos);
-    void render( int xPos, int yPos, SDL_Rect* clip );
+    void update(std::uint32_t* buffer, int pitch);
     void free();
-
-    const int getWidth() { return mWidht; }
-    const int getHeight() { return mHeight; }
+    SDL_Texture* getTexture();
 };
