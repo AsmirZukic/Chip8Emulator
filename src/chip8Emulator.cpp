@@ -6,7 +6,6 @@
 
 #include "../include/Chip8.h"
 #include "../include/engine.hpp"
-#include "../include/texture.hpp"
 
 int main( int argc, char* argv[] )
 {
@@ -16,11 +15,11 @@ int main( int argc, char* argv[] )
 	auto lastCycleTime = std::chrono::high_resolution_clock::now();
     auto cycleDelay = 10; 
 
-    while( Engine::getInstance()->isRunning() )
-    {
-        Texture texture(64, 32);
+    Engine engine;
 
-        InputHandler::getInstance()->update(emulator.keyPad);
+    while( engine.isRunning() )
+    {
+        engine.handleInput(&engine, emulator.keyPad);
 
         auto currentTime = std::chrono::high_resolution_clock::now();
 		float dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - lastCycleTime).count();
@@ -30,13 +29,9 @@ int main( int argc, char* argv[] )
 			lastCycleTime = currentTime;
 
 			emulator.Cycle();
-
-            texture.update(emulator.video,videoPitch);
-			Engine::getInstance()->render(texture.getTexture());
-            Engine::getInstance()->draw();
+            engine.updateTexture(emulator.video);
+			engine.render();
 		}
-
-
 
     }
 

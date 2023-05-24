@@ -8,33 +8,28 @@ const int VIDEO_WIDTH = 32;
 class Chip8
 {
     public:
+        std::uint8_t keyPad[16]{};
+        std::uint32_t video[64*32]{};
+       
+        Chip8(char* path);
+        void Cycle();
+
+    private:
         std::uint8_t registers[16];
         std::uint8_t memory[4096];
         std::uint16_t index{};
-        std::uint16_t pc{};
+        std::uint16_t pc = 0x200;
         std::uint16_t stack[16]{};
         std::uint8_t sp{};
         std::uint8_t delayTimer{};
         std::uint8_t soundTImer{};
-        std::uint8_t keyPad[16]{};
-        std::uint32_t video[64*32]{};
         std::uint16_t opcode;
 
         std::default_random_engine randGen;
 	    std::uniform_int_distribution<uint8_t> randByte;
 
-        Chip8(char* path);
-
         void loadRom(char* fileName);
         void loadFontSet();
-        void Cycle();
-
-        typedef void (Chip8::*Chip8Func)();
-        Chip8Func table[0xF + 1];
-        Chip8Func table0[0xE + 1];
-        Chip8Func table8[0xE + 1];
-        Chip8Func tableE[0xE + 1];
-        Chip8Func tableF[0x65 + 1];
 
         void OP_00E0();
         void OP_00EE();
@@ -81,4 +76,12 @@ class Chip8
         void TableE();
         void TableF();
         void OP_NULL();
+
+        typedef void (Chip8::*Chip8Func)();
+        Chip8Func table[0xF + 1];
+        Chip8Func table0[0xE + 1];
+        Chip8Func table8[0xE + 1];
+        Chip8Func tableE[0xE + 1];
+        Chip8Func tableF[0x65 + 1];
+
 };

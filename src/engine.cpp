@@ -2,62 +2,66 @@
 #include <iostream>
 #include <stdexcept>
 
-Engine* Engine::iEngine = nullptr;
-
 Engine::Engine()
 {
-  try
+  mIsRunning = true;
+  if( !(SDL_INIT_VIDEO < 0) )
   {
-    //If the window is equal to nullptr
-    if( !( Window::getInstance()->getWindow() ) )
-    {
-      throw "Could not create window";
-    }
+    mWindow = SDL_CreateWindow( "Chip8", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 320, SDL_WINDOW_RESIZABLE );
+
+    if( !mWindow )
+      close();
+
     else
     {
-      //If the renderer is equal to nullptr
-      if( !( Renderer::getInstance()->getRenderer() ) )
-        throw "Could not create Renderer";
+      mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
 
-      //Else the engine is running
-      running = true;
+      if( !mRenderer )
+        close();
     }
-  } catch ( const char* msg )
-  {
-    std::cerr << msg << '\n';
-    running = false;
   }
+
+  mTexture = SDL_CreateTexture( mRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 64, 32);
 }
 
 Engine::~Engine()
 {
-  running = false;
-
-  Window::getInstance()->close();
-  Renderer::getInstance()->close();
+  close();
 }
 
-
-void Engine::render(SDL_Texture* texture)
+void Engine::close()
 {
-  SDL_RenderClear( Renderer::getInstance()->getRenderer() );
-  SDL_RenderCopy(Renderer::getInstance()->getRenderer(), texture, nullptr, nullptr);
+    SDL_DestroyWindow( mWindow );
+    SDL_DestroyRenderer(mRenderer);
+    SDL_DestroyTexture(mTexture);
+
+    mWindow = nullptr;
+    mRenderer = nullptr;
+    mTexture = nullptr;
+
+    mIsRunning = false;
+
+    SDL_Quit();
 }
 
-const bool Engine::isRunning()
+void Engine::render()
 {
-  return Window::getInstance()->isOpen() && Renderer::getInstance()->isCreated() && running;
+  SDL_RenderClear( mRenderer );
+  SDL_RenderCopy(mRenderer, mTexture, nullptr, nullptr);
+  SDL_RenderPresent( mRenderer);
 }
 
-void Engine::draw()
+void Engine::updateTexture( std::uint32_t* buffer)
 {
-  SDL_RenderPresent( Renderer::getInstance()->getRenderer() );
+    SDL_UpdateTexture( mTexture, nullptr, buffer, 8*32);
 }
 
-Engine* Engine::getInstance()
+void Engine::handleInput(Engine* engine, std::uint8_t* keys)
 {
-  if( !iEngine )
-    iEngine = new Engine();
+    mInputHandler.update(engine, keys);
+}
 
-  return iEngine;
+bool Engine::isRunning()
+{
+    return mIsRunning;
 }

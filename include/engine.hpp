@@ -1,26 +1,28 @@
 #pragma once
-#include "renderer.hpp"
 #include "inputHandler.hpp"
-#include "texture.hpp"
+
+#include <SDL2/SDL.h>
 
 class Engine  
 {
 private:
-  bool running = false;
+  SDL_Window* mWindow = nullptr;
+  SDL_Renderer* mRenderer = nullptr;
+  SDL_Texture* mTexture = nullptr;
 
-  static Engine* iEngine;
+  InputHandler mInputHandler;
 
-  Engine();
-  Engine( const Engine& e2 );
 
-  ~Engine();
+  bool mIsRunning = false;
 
 public:
-  static Engine* getInstance();
+  Engine();
+  ~Engine();
+  void render();
+  void updateTexture( std::uint32_t* buffer);
+  void handleInput(Engine* engine, std::uint8_t* keys);
 
-  virtual void render( SDL_Texture* texture );
+  void close();
 
-  const bool isRunning();
-
-  void draw();
+  bool isRunning();
 };

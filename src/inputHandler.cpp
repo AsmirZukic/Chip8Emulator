@@ -1,11 +1,9 @@
 #include "../include/inputHandler.hpp"
 #include "../include/engine.hpp"
 
-InputHandler* InputHandler::iHandler = nullptr;
-
 InputHandler::InputHandler(){}
 
-void InputHandler::update( std::uint8_t* keys)
+void InputHandler::update( Engine* engine, std::uint8_t* keys)
 {
 	SDL_Event event;
 
@@ -14,11 +12,11 @@ void InputHandler::update( std::uint8_t* keys)
 		switch ( event.type )
 		{
 		case SDL_QUIT:
-			Window::getInstance()->close();
+			engine->close();
 			break;
 
 		case SDL_KEYDOWN:
-			onKeyDown( &event, keys );
+			onKeyDown( engine, &event, keys );
 			break;
 
 		case SDL_KEYUP:
@@ -31,13 +29,13 @@ void InputHandler::update( std::uint8_t* keys)
 	}
 }
 
-void InputHandler::onKeyDown( SDL_Event* event, std::uint8_t* keys)
+void InputHandler::onKeyDown(Engine* engine, SDL_Event* event, std::uint8_t* keys)
 {
 	switch (event->key.keysym.sym)
 	{
 		case SDLK_ESCAPE:
 		{
-			Window::getInstance()->close();
+			engine->close();
 		} break;
 
 		case SDLK_x:
@@ -218,12 +216,4 @@ bool InputHandler::isKeyDown( SDL_Scancode key )
 			return false;
 	}
 	return false;
-}
-
-InputHandler* InputHandler::getInstance()
-{
-  if ( !iHandler )
-    iHandler = new InputHandler();
-
-  return iHandler;
 }
