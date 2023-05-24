@@ -206,37 +206,33 @@ void Chip8::OP_Cxkk()
 
 void Chip8::OP_Dxyn()
 {
-	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
-	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
-	uint8_t height = opcode & 0x000Fu;
+	std::uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	std::uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+	std::uint8_t height = opcode & 0x000Fu;
 
-	// Wrap if going beyond screen boundaries
-	uint8_t xPos = registers[Vx] % VIDEO_HEIGHT;
-	uint8_t yPos = registers[Vy] % VIDEO_WIDTH;
+	std::uint8_t xPos = registers[Vx] % VIDEO_HEIGHT;
+	std::uint8_t yPos = registers[Vy] % VIDEO_WIDTH;
 
 	registers[0xF] = 0;
 
-	for (unsigned int row = 0; row < height; ++row)
+	for (auto row = 0; row < height; ++row)
 	{
-		uint8_t spriteByte = memory[index + row];
+		std::uint8_t spriteByte = memory[index + row];
 
-		for (unsigned int col = 0; col < 8; ++col)
+		for (auto col = 0; col < 8; ++col)
 		{
-			uint8_t spritePixel = spriteByte & (0x80u >> col);
-			uint32_t* screenPixel = &video[(yPos + col) * VIDEO_HEIGHT + (xPos + row)];
+			std::uint8_t spritePixel = spriteByte & (0x80u >> col);
+			std::uint32_t* screenPixel = &video[(yPos + row) * VIDEO_WIDTH + (xPos + col)];
 
-			// Sprite pixel is on
-			if (spritePixel)
-			{
-				// Screen pixel also on - collision
-				if (*screenPixel == 0xFFFFFFFF)
-				{
-					registers[0xF] = 1;
-				}
-
-				// Effectively XOR with the sprite pixel
-				*screenPixel ^= 0xFFFFFFFF;
-			}
+			if(spritePixel)
+            {
+                *screenPixel = 0xFFFFFFFF;
+                registers[0xF] = 1;
+            }
+            else if(*screenPixel == 0x0 && spritePixel == 0x1)
+            {
+                *screenPixel ^= 0xFFFFFFFF;
+            }
 		}
 	}
 }
@@ -273,74 +269,13 @@ void Chip8::OP_Fx0A()
 {
     std::uint8_t registerVx = (opcode & 0x0F00u) >> 8u;
 
-	if (keyPad[0])
-	{
-		registers[registerVx] = 0;
-	}
-	else if (keyPad[1])
-	{
-		registers[registerVx] = 1;
-	}
-	else if (keyPad[2])
-	{
-		registers[registerVx] = 2;
-	}
-	else if (keyPad[3])
-	{
-		registers[registerVx] = 3;
-	}
-	else if (keyPad[4])
-	{
-		registers[registerVx] = 4;
-	}
-	else if (keyPad[5])
-	{
-		registers[registerVx] = 5;
-	}
-	else if (keyPad[6])
-	{
-		registers[registerVx] = 6;
-	}
-	else if (keyPad[7])
-	{
-		registers[registerVx] = 7;
-	}
-	else if (keyPad[8])
-	{
-		registers[registerVx] = 8;
-	}
-	else if (keyPad[9])
-	{
-		registers[registerVx] = 9;
-	}
-	else if (keyPad[10])
-	{
-		registers[registerVx] = 10;
-	}
-	else if (keyPad[11])
-	{
-		registers[registerVx] = 11;
-	}
-	else if (keyPad[12])
-	{
-		registers[registerVx] = 12;
-	}
-	else if (keyPad[13])
-	{
-		registers[registerVx] = 13;
-	}
-	else if (keyPad[14])
-	{
-		registers[registerVx] = 14;
-	}
-	else if (keyPad[15])
-	{
-		registers[registerVx] = 15;
-	}
-	else
-	{
-		pc -= 2;
-	}
+    for( auto i = 0; i < 15; i++)
+    {
+        if( keyPad[i])
+            registers[registerVx] = i;
+    }
+	
+    pc -= 2;
 }
 
 void Chip8::OP_Fx15()

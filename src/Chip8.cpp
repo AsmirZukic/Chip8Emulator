@@ -29,6 +29,7 @@ std::uint8_t fontset[80] =
 Chip8::Chip8(char* path):randGen(std::chrono::system_clock::now().time_since_epoch().count())
 {
     loadRom(path);
+    loadFontSet();
 
     randByte = std::uniform_int_distribution<uint8_t>(0, 255U); 
 
@@ -92,9 +93,9 @@ Chip8::Chip8(char* path):randGen(std::chrono::system_clock::now().time_since_epo
 
 void Chip8::loadFontSet()
 {
-    for(auto i = 0; i < 0x50; i++)
+    for(long i = 0; i < 0x50; i++)
     {
-        memory[0x50 + i] = fontset[i];
+        memory[0x50u + i] = fontset[i];
     }
 }
 
@@ -107,20 +108,18 @@ void Chip8::loadRom(char* filename)
         throw std::runtime_error("Could not open file");
     }
 
-    const std::streampos START_ADDRESS = 200;
-    std::streampos size = file.tellg() + START_ADDRESS;
-    std::uint8_t* buffer = new std::uint8_t[size];
+    unsigned int START_ADDRESS = 0x200;
+    std::streampos size = file.tellg();
+    char* buffer = new char[size];
 
     file.seekg(0, std::ios::beg);
-    file.read((char*)buffer, size);
+    file.read(buffer, size);
     file.close();
 
-    for(auto i=0; i < size; i++)
+    for(long i=0; i < size; i++)
     {
-        memory[(int)START_ADDRESS + i] = buffer[i];
+        memory[START_ADDRESS + i] = buffer[i];
     }
-
-    loadFontSet();
 
     delete[] buffer;
 }

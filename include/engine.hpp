@@ -19,7 +19,7 @@ public:
   Engine();
   ~Engine();
   void render();
-  void updateTexture( std::uint32_t* buffer);
+  void updateTexture( std::uint32_t* buffer, int pitch);
   void handleInput(Engine* engine, std::uint8_t* keys);
 
   void close();

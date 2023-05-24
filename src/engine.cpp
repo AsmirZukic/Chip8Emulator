@@ -8,14 +8,12 @@ Engine::Engine()
   if( !(SDL_INIT_VIDEO < 0) )
   {
     mWindow = SDL_CreateWindow( "Chip8", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 320, SDL_WINDOW_RESIZABLE );
-
     if( !mWindow )
       close();
 
     else
     {
       mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
-
       if( !mRenderer )
         close();
     }
@@ -51,9 +49,9 @@ void Engine::render()
   SDL_RenderPresent( mRenderer);
 }
 
-void Engine::updateTexture( std::uint32_t* buffer)
+void Engine::updateTexture( std::uint32_t* buffer, int pitch)
 {
-    SDL_UpdateTexture( mTexture, nullptr, buffer, 8*32);
+    SDL_UpdateTexture( mTexture, nullptr, buffer, pitch);
 }
 
 void Engine::handleInput(Engine* engine, std::uint8_t* keys)
