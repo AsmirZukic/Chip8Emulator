@@ -11,7 +11,7 @@ int main( int argc, char* argv[] )
 {
     Chip8 emulator(argv[1]);
 
-    int videoPitch = sizeof(emulator.video[0])*VIDEO_WIDTH;
+    int videoPitch = sizeof(emulator.video[0])* VIDEO_WIDTH;
 	auto lastCycleTime = std::chrono::high_resolution_clock::now();
     auto cycleDelay = 10; 
 

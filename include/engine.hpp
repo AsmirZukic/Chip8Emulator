@@ -12,14 +12,17 @@ private:
 
   InputHandler mInputHandler;
 
-
   bool mIsRunning = false;
+
+  std::uint32_t videoBuffer[64*32]{};
+
+
 
 public:
   Engine();
   ~Engine();
   void render();
-  void updateTexture( std::uint32_t* buffer, int pitch);
+  void updateTexture( std::uint8_t* buffer, int pitch);
   void handleInput(Engine* engine, std::uint8_t* keys);
 
   void close();

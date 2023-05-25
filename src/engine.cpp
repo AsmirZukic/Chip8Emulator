@@ -19,7 +19,7 @@ Engine::Engine()
     }
   }
 
-  mTexture = SDL_CreateTexture( mRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 64, 32);
+  mTexture = SDL_CreateTexture( mRenderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 64, 32);
 }
 
 Engine::~Engine()
@@ -49,9 +49,17 @@ void Engine::render()
   SDL_RenderPresent( mRenderer);
 }
 
-void Engine::updateTexture( std::uint32_t* buffer, int pitch)
+void Engine::updateTexture( std::uint8_t* buffer, int pitch)
 {
-    SDL_UpdateTexture( mTexture, nullptr, buffer, pitch);
+  for( int i = 0; i < (64*32); i++)
+  {
+    if( buffer[i] > 0x00 )
+      videoBuffer[i] = 0xFFFFFFFF;
+    else
+      videoBuffer[i] = 0x00000000;
+  }
+
+  SDL_UpdateTexture( mTexture, nullptr, videoBuffer, pitch);
 }
 
 void Engine::handleInput(Engine* engine, std::uint8_t* keys)

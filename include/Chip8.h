@@ -9,7 +9,7 @@ class Chip8
 {
     public:
         std::uint8_t keyPad[16]{};
-        std::uint32_t video[64*32]{};
+        std::uint8_t video[64*32]{};
        
         Chip8(char* path);
         void Cycle();
