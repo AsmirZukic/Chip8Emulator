@@ -32,7 +32,7 @@ This project aims to emulate the Chip-8 virtual machine, allowing users to run a
 2. Compile the source code:
 
    ```shell
-   g++ -o chip8 chip8.cpp `sdl2-config --cflags --libs`
+   make all
    ```
 
 3. Run the emulator:
