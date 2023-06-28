@@ -26,7 +26,7 @@ This project aims to emulate the Chip-8 virtual machine, allowing users to run a
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/your-username/chip8-emulator.git
+   git clone git@github.com:AsmirZukic/Chip8Emulator.git
    ```
 
 2. Compile the source code:
@@ -69,4 +69,3 @@ Contributions to this project are welcome. If you find any issues or have ideas 
 
 - [John Earnest](https://github.com/JohnEarnest) for his comprehensive Chip-8 technical reference and test ROMs.
 - The creators and contributors of the SDL2 library for providing a powerful and cross-platform multimedia library.
-```
