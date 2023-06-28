@@ -26,7 +26,7 @@ This project aims to emulate the Chip-8 virtual machine, allowing users to run a
 1. Clone the repository:
 
    ```shell
-   git clone git@github.com:AsmirZukic/Chip8Emulator.git
+   git clone <repository_url>
    ```
 
 2. Compile the source code:
