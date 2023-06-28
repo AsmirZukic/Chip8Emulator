@@ -6,7 +6,7 @@ CODEDIR=. src
 INCDIR=. /include/
 
 #Compiler. Define as gcc for C and g++ for C++
-CC=g++
+CC=g++ 
 
 #Optimization flag
 # -O0 no optimization, faster compile time, great for debugging builds
@@ -19,7 +19,7 @@ DEPFLAGS=-MP -MD
 # -Wall used to turn on most warnings
 # -c compiles sources to object files 
 # For each loop used to add -I onto each include directory
-CFLAGS=-c -Wall $( foreach D, $(INCDIR), -I$(D) ) $(OPT) $(DEPFLAGS)
+CFLAGS=-c -Wall -g $( foreach D, $(INCDIR), -I$(D) ) $(OPT) $(DEPFLAGS)
 
 #SDL2 comipler flasgs 
 SDL2=-w -lSDL2 -lSDL2_image

@@ -32,3 +32,6 @@
 *.app
 
 .vscode
+.cproject
+.project
+.settings
